@@ -1,0 +1,17 @@
+{
+  "event": {
+    "name": "Field Day 2026"
+  },
+  "stations": [
+    { "id": "sta80", "name": "80m Station", "band": "80m",  "mode": "Any" },
+    { "id": "sta40", "name": "40m Station", "band": "40m",  "mode": "Any"  },
+    { "id": "sta20", "name": "20m Station", "band": "20m",  "mode": "Any" },
+    { "id": "sta15", "name": "15m Station", "band": "15m",  "mode": "Any" },
+    { "id": "sta10", "name": "10m Station", "band": "10m",  "mode": "Any" }
+  ],
+  "schedule": {
+    "start": "2026-06-27 14:00",
+    "end":   "2026-06-28 12:00",
+    "tz": "EDT (UTC-4)"
+  }
+}
