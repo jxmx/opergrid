@@ -117,6 +117,6 @@ the system to ouse a different set of files, thus effectively
 creating a separate event. For example `event=foo` will cause
 the use of `config_foo.js` and `signups_foo.js` (Note that
 the underscore `_` is added automatically). One can create as many
-arbitrary `config_$event.js` files as needed. There is no mast menu
-however as, again, this is intended to be used within a larger
-web ecosystem.
+arbitrary `config_$event.js` files as needed. There is no main menu
+to find/select events however as, again, this is intended to be
+used within a large web ecosystem.
