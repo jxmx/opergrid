@@ -60,6 +60,14 @@ require_once(__DIR__ . "/../config.php");
   </div>
 </main>
 
+<footer class="site-footer">
+Powered by OperGrid
+<!-- Place this tag where you want the button to render. -->
+<a class="github-button" href="https://github.com/jxmx/opergrid"
+  data-color-scheme="no-preference: light; light: light; dark: dark;"
+  data-size="large" aria-label="OperGrid @ Github">OperGrid @ Github</a>
+</footer>
+
 <!-- Modal -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal" id="modal">
@@ -74,5 +82,6 @@ require_once(__DIR__ . "/../config.php");
 <div class="toast" id="toast"></div>
 
 <script src="js/opergrid.js" defer></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
 </body>
 </html>
