@@ -239,9 +239,19 @@ main {
   color: var(--accent);
 }
 
+/* Cell outside a station's schedule — not interactive */
+.cell-na {
+  height: var(--cell-h);
+  min-width: var(--cell-w);
+  background: var(--bg);
+  border: 1px solid var(--surface2);
+  cursor: default;
+}
+
 /* Day boundary row — thick top border to visually separate days */
 .schedule-grid tr.day-boundary .td-time,
-.schedule-grid tr.day-boundary .cell {
+.schedule-grid tr.day-boundary .cell,
+.schedule-grid tr.day-boundary .cell-na {
   border-top: 2px solid var(--amber);
 }
 

@@ -87,8 +87,35 @@ function showToast(msg, type = 'success') {
 
 // ── Build grid ─────────────────────────────────────────────────────────────
 
+function stationRanges(station) {
+  const sched = station.schedule || config.schedule;
+  return Array.isArray(sched) ? sched : [sched];
+}
+
 function buildGrid() {
-  const timeslots = generateTimeslots(config.schedule.start, config.schedule.end);
+  // Per-station slot sets keyed by station id
+  const stationSlotSets = {};
+  config.stations.forEach(st => {
+    const keySet = new Set();
+    stationRanges(st).forEach(range => {
+      generateTimeslots(range.start, range.end).forEach(s => keySet.add(s.key));
+    });
+    stationSlotSets[st.id] = keySet;
+  });
+
+  // Union of all slot keys; ISO "YYYY-MM-DDTHH:MM" sorts lexicographically = chronologically
+  const allKeySet = new Set();
+  Object.values(stationSlotSets).forEach(s => s.forEach(k => allKeySet.add(k)));
+  const sortedKeys = [...allKeySet].sort();
+
+  // Convert sorted keys back to slot objects, computing day-boundary labels in order
+  let prevDate = null;
+  const allSlots = sortedKeys.map(key => {
+    const d = new Date(key + ':00');
+    const label = fmtTimeLabel(d, prevDate);
+    prevDate = d;
+    return { key, label, date: d };
+  });
 
   // Header
   const head = document.getElementById('grid-head');
@@ -104,9 +131,8 @@ function buildGrid() {
   // Rows
   const tbody = document.getElementById('grid-body');
   tbody.innerHTML = '';
-  timeslots.forEach(slot => {
+  allSlots.forEach(slot => {
     const tr = document.createElement('tr');
-    // Add a CSS class when this row starts a new day (label contains '/')
     if (slot.label.includes('/')) tr.classList.add('day-boundary');
 
     const tdTime = document.createElement('td');
@@ -116,13 +142,17 @@ function buildGrid() {
 
     config.stations.forEach(st => {
       const td = document.createElement('td');
-      td.className = 'cell';
-      td.dataset.station  = st.id;
-      td.dataset.timeslot = slot.key;
-      td.dataset.stname   = st.name;
-      td.dataset.stmeta   = st.band + ' · ' + st.mode;
-      td.dataset.slotdt   = slot.date.toISOString();
-      td.addEventListener('click', onCellClick);
+      if (stationSlotSets[st.id].has(slot.key)) {
+        td.className = 'cell';
+        td.dataset.station  = st.id;
+        td.dataset.timeslot = slot.key;
+        td.dataset.stname   = st.name;
+        td.dataset.stmeta   = st.band + ' · ' + st.mode;
+        td.dataset.slotdt   = slot.date.toISOString();
+        td.addEventListener('click', onCellClick);
+      } else {
+        td.className = 'cell-na';
+      }
       tr.appendChild(td);
     });
 

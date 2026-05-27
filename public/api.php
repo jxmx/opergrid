@@ -125,12 +125,32 @@ if ($method === 'POST' && $action === 'claim') {
 
     if (!$station || !$timeslot)
         jsonError('station and timeslot are required');
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/', $timeslot))
+        jsonError('Invalid timeslot format');
     if (!$name)
         jsonError('Name is required');
     if (!preg_match('/^[A-Z0-9\/]{3,10}$/', $callsign))
         jsonError('Invalid callsign format');
     if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         jsonError('Invalid email address');
+
+    // Validate station exists and timeslot is within its schedule
+    $cfg = json_decode(file_get_contents($config_file), true);
+    $stationCfg = null;
+    foreach ($cfg['stations'] as $st) {
+        if ($st['id'] === $station) { $stationCfg = $st; break; }
+    }
+    if (!$stationCfg) jsonError('Unknown station');
+    $sched   = $stationCfg['schedule'] ?? $cfg['schedule'];
+    $ranges  = isset($sched['start']) ? [$sched] : $sched;
+    $slotDt  = new DateTime($timeslot . ':00');
+    $inRange = false;
+    foreach ($ranges as $range) {
+        $rangeStart = new DateTime(str_replace(' ', 'T', $range['start']));
+        $rangeEnd   = new DateTime(str_replace(' ', 'T', $range['end']));
+        if ($slotDt >= $rangeStart && $slotDt < $rangeEnd) { $inRange = true; break; }
+    }
+    if (!$inRange) jsonError('Timeslot is outside this station\'s schedule');
 
     $signups = readSignups($signups_file);
     $key = slotKey($station, $timeslot);
