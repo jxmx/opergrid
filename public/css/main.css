@@ -12,9 +12,9 @@
   --red-dim:    #3a1010;
   --text:       #e6edf3;
   --text-muted: #7d8590;
-  --mono:       'Share Tech Mono', monospace;
-  --head:       'Barlow Condensed', sans-serif;
-  --body:       'Barlow', sans-serif;
+  --mono:       monospace;
+  --head:       sans-serif;
+  --body:       sans-serif;
   --radius:     4px;
   --cell-w:     140px;
   --cell-h:     58px;
