@@ -8,6 +8,8 @@ similar organization. As such, it does not have any form of
 real security, accounts, abuse-protection, etc. Please be thoughtful
 when deploying this.
 
+![App screenshot](screenshot.png)
+
 ## Main Files
 
 ```
