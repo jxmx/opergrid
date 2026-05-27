@@ -202,7 +202,6 @@ function openModal(station, timeslot, stname, stmeta, td_isodate) {
       <div class="taken-card">
         <div class="tc-callsign">${su.callsign}</div>
         <div class="tc-name">${su.name}</div>
-        <div class="tc-email">${su.email}</div>
       </div>
       <p style="font-size:.8rem;color:var(--text-muted)">This slot is already claimed.</p>`;
   } else {
@@ -239,17 +238,12 @@ function closeModal() {
 async function submitClaim() {
   const name     = document.getElementById('f-name').value.trim();
   const callsign = document.getElementById('f-call').value.trim().toUpperCase();
-  const email    = document.getElementById('f-email').value.trim();
 
   let valid = true;
 
   const callRe = /^[A-Z0-9\/]{3,10}$/;
   document.getElementById('err-call').classList.toggle('visible', !callRe.test(callsign));
   if (!callRe.test(callsign)) valid = false;
-
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  document.getElementById('err-email').classList.toggle('visible', !emailRe.test(email));
-  if (!emailRe.test(email)) valid = false;
 
   if (!valid || !name) return;
 
@@ -261,7 +255,7 @@ async function submitClaim() {
     const res = await apiFetch(`?action=claim&event=${eventCode}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...pending, name, callsign, email }),
+      body: JSON.stringify({ ...pending, name, callsign}),
     });
 
     if (!res.success) {

@@ -34,7 +34,6 @@ function readSignups($signups_file): array {
     if (!is_array($data)) return [];
 
     return array_map(function($record) {
-        unset($record['email']);
         return $record;
     }, $data);
 }
@@ -121,7 +120,6 @@ if ($method === 'POST' && $action === 'claim') {
     $timeslot = substr(trim($body['timeslot'] ?? ''), 0, 30);
     $name     = substr(trim($body['name']     ?? ''), 0, 30);
     $callsign = strtoupper(substr(trim($body['callsign'] ?? ''), 0, 10));
-    $email    = substr(trim($body['email']    ?? ''), 0, 40);
 
     if (!$station || !$timeslot)
         jsonError('station and timeslot are required');
@@ -131,8 +129,6 @@ if ($method === 'POST' && $action === 'claim') {
         jsonError('Name is required');
     if (!preg_match('/^[A-Z0-9\/]{3,10}$/', $callsign))
         jsonError('Invalid callsign format');
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL))
-        jsonError('Invalid email address');
 
     // Validate station exists and timeslot is within its schedule
     $cfg = json_decode(file_get_contents($config_file), true);
@@ -160,7 +156,6 @@ if ($method === 'POST' && $action === 'claim') {
     $signups[$key] = [
         'name'      => htmlspecialchars($name, ENT_QUOTES),
         'callsign'  => $callsign,
-        'email'     => $email,
         'claimed_at'=> date('c'),
     ];
 
