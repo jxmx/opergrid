@@ -43,20 +43,45 @@ opergrid/
 5. Open the location in your browser.
 
 ## config.json Reference
+The `event` label is simply the title.
 
+The `stations[]` is an array of values:
+
+  * `id` - The unique ID for the station, limited to `[a-zA-Z0-9]`, max 10 chars, must be unique
+  * `name` - The title for this item
+  * `band` - The band label
+  * `mode` - The mode for the operation
+  * `schedule` - (Optional) Specify one or more times this station is avalable, bounded
+    by the overall schedule. If absent, the station's schedule is the full range of the
+    event schdule.
+
+Here's an example showing different combinations:
 ```json
 {
   "event": {
-    "name": "Your Event Name"
+    "name": "Field Day 2026"
   },
   "stations": [
-    { "id": "sta1", "name": "Station 1", "band": "20m", "mode": "SSB" }
-    // add as many stations as you like
+    { "id": "sta80", "name": "80m Station", "band": "80m",  "mode": "Any" },
+    { "id": "sta40", "name": "40m Station", "band": "40m",  "mode": "Any",
+      "schedule": { "start": "2026-06-27 18:00", "end": "2026-06-28 12:00" } },
+    { "id": "sta20", "name": "20m Station", "band": "20m",  "mode": "Any",
+      "schedule": { "start": "2026-06-27 14:00", "end": "2026-06-28 02:00" } },
+    { "id": "sta15", "name": "15m Station", "band": "15m",  "mode": "Any",
+      "schedule": [
+        { "start": "2026-06-27 14:00", "end": "2026-06-27 22:00" },
+        { "start": "2026-06-28 08:00", "end": "2026-06-28 12:00" }
+      ] },
+    { "id": "sta10", "name": "10m Station", "band": "10m",  "mode": "Any",
+      "schedule": [
+        { "start": "2026-06-27 14:00", "end": "2026-06-27 20:00" },
+        { "start": "2026-06-28 10:00", "end": "2026-06-28 12:00" }
+      ] }
   ],
   "schedule": {
-    "start": "2026-06-27 08:00",   // "YYYY-MM-DD HH:MM" — 24-hour local time
-    "end":   "2026-06-28 20:00"    // can span multiple days; one row per hour generated
-    "tz":    "EST (UTC-4)"         // this is a DISPLAY ONLY representation of the timezone you want to use
+    "start": "2026-06-27 14:00",
+    "end":   "2026-06-28 12:00",
+    "tz": "EDT (UTC-4)"
   }
 }
 ```
